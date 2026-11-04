@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
-  SafeAreaView,
   View,
   Text,
   TextInput,
@@ -11,128 +10,14 @@ import {
   StatusBar,
 } from "react-native";
 
+
+
 // Dados fictícios: nenhuma conversa é carregada de um servidor.
-const CHATS = [
-  {
-    id: "1",
-    name: "Lucas Ferreira",
-    message: "Beleza! Até mais tarde.",
-    time: "09:24",
-    unread: 0,
-    sent: true,
-    avatar: "https://i.pravatar.cc/100?img=12",
-  },
-  {
-    id: "2",
-    name: "Família",
-    message: "Mãe: Já chegou em casa?",
-    time: "08:52",
-    unread: 2,
-    group: true,
-  },
-  {
-    id: "3",
-    name: "Ana Clara",
-    message: "Vamos no cinema hoje?",
-    time: "08:37",
-    unread: 0,
-    avatar: "https://i.pravatar.cc/100?img=47",
-  },
-  {
-    id: "4",
-    name: "Trabalho",
-    message: "Carlos: O relatório já foi enviado.",
-    time: "07:56",
-    unread: 0,
-    group: true,
-  },
-  {
-    id: "5",
-    name: "Mariana Silva",
-    message: "📷 Foto",
-    time: "Ontem",
-    unread: 0,
-    avatar: "https://i.pravatar.cc/100?img=44",
-  },
-  {
-    id: "6",
-    name: "Amigos da faculdade",
-    message: "Rafael: Bora no próximo sábado?",
-    time: "Ontem",
-    unread: 0,
-    group: true,
-  },
-  {
-    id: "7",
-    name: "Pedro Santos",
-    message: "Show! 👍",
-    time: "Ontem",
-    unread: 0,
-    avatar: "https://i.pravatar.cc/100?img=13",
-  },
-  {
-    id: "8",
-    name: "Juliana Costa",
-    message: "Tudo bem? Qualquer coisa me chama.",
-    time: "Seg",
-    unread: 0,
-    avatar: "https://i.pravatar.cc/100?img=49",
-  },
-];
+import { CHATS } from "./data/data";
+import ChatItem from "./components/ChatItem";
 
 const FILTERS = ["Todas", "Não lidas", "Favoritos", "Grupos"];
 
-function Avatar({ chat }) {
-  if (chat.avatar) {
-    return <Image source={{ uri: chat.avatar }} style={styles.avatar} />;
-  }
-
-  // Avatar simples para conversas em grupo.
-  return (
-    <View style={[styles.avatar, styles.groupAvatar]}>
-      <Text style={styles.groupAvatarText}>👥</Text>
-    </View>
-  );
-}
-
-function ChatItem({ chat }) {
-  return (
-    <Pressable
-      style={({ pressed }) => [styles.chatRow, pressed && styles.pressedRow]}
-      onPress={() => {
-        // Somente demonstração: não abre uma conversa real.
-      }}
-    >
-      <Avatar chat={chat} />
-
-      <View style={styles.chatContent}>
-        <View style={styles.chatTopLine}>
-          <Text style={styles.chatName} numberOfLines={1}>
-            {chat.name}
-          </Text>
-          <Text style={[styles.chatTime, chat.unread > 0 && styles.unreadTime]}>
-            {chat.time}
-          </Text>
-        </View>
-
-        <View style={styles.chatBottomLine}>
-          <View style={styles.messagePreview}>
-            {chat.sent && <Text style={styles.readTicks}>✓✓ </Text>}
-            <Text style={styles.chatMessage} numberOfLines={1}>
-              {chat.message}
-            </Text>
-          </View>
-
-          {chat.unread > 0 && (
-            <View style={styles.unreadBadge}>
-              <Text style={styles.unreadBadgeText}>{chat.unread}</Text>
-            </View>
-          )}
-        </View>
-      </View>
-    </Pressable>
-  );
-}
 
 export default function App() {
   const [search, setSearch] = useState("");
@@ -159,7 +44,7 @@ export default function App() {
 
   return (
     <View style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="dark-content"/>
 
       {/* Cabeçalho da tela */}
       <View style={styles.header}>
@@ -346,93 +231,7 @@ const styles = StyleSheet.create({
   chatList: {
     paddingBottom: 10,
   },
-  chatRow: {
-    minHeight: 88,
-    paddingLeft: 16,
-    paddingRight: 18,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  pressedRow: {
-    backgroundColor: "#F5F6F6",
-  },
-  avatar: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    backgroundColor: "#DDE2E5",
-  },
-  groupAvatar: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#AAB4BE",
-  },
-  groupAvatarText: {
-    fontSize: 27,
-  },
-  chatContent: {
-    flex: 1,
-    minHeight: 76,
-    marginLeft: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#E5E7E9",
-    justifyContent: "center",
-  },
-  chatTopLine: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-  chatName: {
-    flex: 1,
-    marginRight: 8,
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#111B21",
-  },
-  chatTime: {
-    fontSize: 12,
-    color: "#667781",
-  },
-  unreadTime: {
-    color: "#008F6C",
-  },
-  chatBottomLine: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  messagePreview: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 8,
-  },
-  readTicks: {
-    color: "#29A8E2",
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  chatMessage: {
-    flexShrink: 1,
-    color: "#667781",
-    fontSize: 14,
-  },
-  unreadBadge: {
-    minWidth: 20,
-    height: 20,
-    paddingHorizontal: 5,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#00A884",
-  },
-  unreadBadgeText: {
-    color: "#FFFFFF",
-    fontSize: 11,
-    fontWeight: "700",
-  },
+ 
   emptyText: {
     padding: 28,
     textAlign: "center",
